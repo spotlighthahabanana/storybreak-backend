@@ -444,7 +444,7 @@ class UserManager:
     def ensure_google_user(self, email: str, name: str = "", picture: str = "") -> dict:
         """Google 登入後：若 DB 無此 email 則寫入（密碼佔位），再從 DB 讀回 plan/credits。回傳完整 user_data 供 state 使用。"""
         if not email or email == "guest":
-            return {"email": "guest", "plan": "Free", "credits": 0}
+            return {"email": "guest", "plan": "Pro", "credits": 9999}
         conn = self._conn()
         try:
             existing = conn.execute("SELECT plan, credits FROM users WHERE email = ?", (email,)).fetchone()
@@ -1334,7 +1334,7 @@ def handle_library_gallery_select(evt: gr.SelectData, delete_mode: bool, state=N
 
 def load_video_to_workstation(evt: gr.SelectData, state=None):
     prev_state = state or {}
-    user = prev_state.get("user", {"email": "guest", "plan": "Free", "credits": 0})
+    user = prev_state.get("user", {"email": "guest", "plan": "Pro", "credits": 9999})
     user_email = user.get("email") or "guest"
     library = lib_manager.load(user_email)
     if evt.index < 0 or evt.index >= len(library):
@@ -1698,7 +1698,8 @@ def run_detection_pipeline(video_file, method, threshold, min_len, state=None, p
             video_path, method=method_key, threshold=threshold, min_scene_len=min_len,
             progress_callback=lambda p, m: progress(0.2 + p * 0.5, desc=m)
         )
-        user_plan = (state or {}).get("user", {}).get("plan", "Free")
+        user_plan = (state or {}).get("user", {}).get("plan", "Pro")
+        # Pro 版本：不限制場景數
         if user_plan == "Free" and len(scenes) > 10:
             scenes = scenes[:10]
             log_lines.append("[%s] Free Plan: limited to 10 scenes. Upgrade to Pro for full analysis." % _log_ts())
@@ -2262,7 +2263,7 @@ def _header_logo_html(user_data=None):
         user_data = {}
     if isinstance(user_data, str):
         user_data = {"plan": user_data}
-    user_plan = user_data.get("plan", "Free")
+    user_plan = user_data.get("plan", "Pro")
     user_name = (user_data.get("name") or user_data.get("email") or "").strip()
     picture_url = (user_data.get("picture") or "").strip()
     if user_name:
@@ -2396,7 +2397,7 @@ def create_ui():
         head=_critical_dark_head,
     ) as app:
 
-        state = gr.State({"user": {"email": "guest", "plan": "Free", "credits": 0}})
+        state = gr.State({"user": {"email": "guest", "plan": "Pro", "credits": 9999}})
         cfg = load_config()
 
         # --- 1. Login / Register Overlay ---
