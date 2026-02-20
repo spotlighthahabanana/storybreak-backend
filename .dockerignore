@@ -1,0 +1,30 @@
+# Git / IDE
+.git
+.gitignore
+.cursor
+.vscode
+*.md
+!README.md
+
+# Python
+__pycache__
+*.py[cod]
+*.egg-info
+.eggs
+.env
+.venv
+venv
+env
+
+# 本地輸出（雲端會用 volume 或重新建立）
+output/
+exports/
+*.db-journal
+*.db-wal
+*.db-shm
+
+# 測試 / 暫存
+.pytest_cache
+.coverage
+htmlcov
+*.log

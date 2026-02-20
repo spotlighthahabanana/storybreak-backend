@@ -1,0 +1,11 @@
+# 擋下所有不該上傳的檔案
+output/
+.gradio/
+__pycache__/
+venv/
+env/
+*.mp4
+*.mov
+*.avi
+*.zip
+*.log

@@ -1,0 +1,38 @@
+# StoryBreak Pro — AI Video Reference Breakdown Tool
+# 雲端部署 (Railway) 建議鎖定 gradio 版本，避免 CSS/UI 跑版
+
+# Web UI（鎖版以保持介面穩定）
+gradio==4.44.1
+
+# Video processing (scene detection + cut)
+scenedetect[opencv]>=0.6.2
+opencv-python-headless>=4.8.0
+
+# TransNet V2 (AI scene detection) + FFmpeg for clips
+torch>=1.9.0
+transnetv2-pytorch
+huggingface_hub
+imageio[ffmpeg]
+imageio-ffmpeg
+
+# LLaVA-NeXT Video (Generate AI Note) / CLIP
+transformers>=5.0.0
+av
+Pillow>=10.0.0
+
+# AI annotation
+openai>=1.12.0
+
+# StoryBreak Pro 入口 (main.py)：FastAPI + Google 登入
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+authlib>=1.2.0
+starlette>=0.27.0
+
+# Progress & utilities
+tqdm>=4.66.0
+python-dotenv>=1.0.0
+bcrypt>=4.0.0
+
+# PDF export (CJK)
+fpdf2>=2.7.0
