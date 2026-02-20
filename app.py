@@ -1384,9 +1384,9 @@ def load_video_to_workstation(evt: gr.SelectData, state=None):
         if clip and os.path.exists(clip):
             video_update = gr.update(value=clip)
         else:
-            video_update = gr.update(value=video_path)
+            video_update = gr.update(value=video_path or "")
     else:
-        video_update = gr.update(value=video_path)
+        video_update = gr.update(value=video_path or "")
 
     s = first_scene
     info_md = f"""
@@ -1535,7 +1535,7 @@ def _update_ui_for_scene(state, idx):
     if clip_path and os.path.exists(clip_path):
         player_upd = gr.update(value=clip_path, autoplay=True)
     else:
-        player_upd = gr.update(value=state['video_path'])
+        player_upd = gr.update(value=state.get('video_path') or "")
 
     header = f"Scene #{s.scene_number} / {len(scenes)}"
     prev_state = gr.update(interactive=(idx > 0))
@@ -2388,14 +2388,8 @@ body, .gradio-container, .contain, main { background: #121212 !important; color:
 """
 
 def create_ui():
-    # 必須在這裡直接套用 theme, css 和 js，FastAPI 掛載時才吃得到樣式！
-    with gr.Blocks(
-        title="StoryBreak Pro",
-        theme=sci_fi_theme,
-        css=css_pro,
-        js=js_drag_drop,
-        head=_critical_dark_head,
-    ) as app:
+    # Gradio 6.0：theme / css / js / head 改在 launch() 或 mount_gradio_app() 傳入
+    with gr.Blocks(title="StoryBreak Pro") as app:
 
         state = gr.State({"user": {"email": "guest", "plan": "Pro", "credits": 9999}})
         cfg = load_config()
@@ -2985,4 +2979,13 @@ The Ultimate Video Reference Breakdown Tool — for editors, directors, and refe
 if __name__ == "__main__":
     ui = create_ui()
     port = int(os.environ.get("PORT", "7860"))
-    ui.launch(inbrowser=True, server_name="0.0.0.0", server_port=port, theme=sci_fi_theme, css=css_pro, js=js_drag_drop)
+    ui.launch(
+        inbrowser=True,
+        server_name="0.0.0.0",
+        server_port=port,
+        theme=sci_fi_theme,
+        css=css_pro,
+        js=js_drag_drop,
+        head=_critical_dark_head,
+        allowed_paths=["/app/output"],
+    )

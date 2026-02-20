@@ -55,8 +55,12 @@ async def logout_route(request: Request):
 # 呼叫你原本的函數建立 UI
 ui = create_ui()
 
-# 掛載在根路徑 /，套用與 app.py 相同的主題、CSS、JS（登入用 /login/google 避開 Gradio 內建 /login）
-app = gr.mount_gradio_app(app, ui, path="/", theme=sci_fi_theme, css=css_pro, js=js_drag_drop)
+# 掛載在根路徑 /；allowed_paths 授權 Gradio 讀取 Volume 內檔案，避免 403 Forbidden
+app = gr.mount_gradio_app(
+    app, ui, path="/",
+    theme=sci_fi_theme, css=css_pro, js=js_drag_drop,
+    allowed_paths=["/app/output"],
+)
 
 if __name__ == "__main__":
     # Railway 會動態分配 PORT，沒有則預設 7860（本地開發）
