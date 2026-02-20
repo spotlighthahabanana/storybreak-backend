@@ -2984,4 +2984,5 @@ The Ultimate Video Reference Breakdown Tool — for editors, directors, and refe
 
 if __name__ == "__main__":
     ui = create_ui()
-    ui.launch(inbrowser=True, server_name="0.0.0.0", server_port=7860, theme=sci_fi_theme, css=css_pro, js=js_drag_drop)
+    port = int(os.environ.get("PORT", "7860"))
+    ui.launch(inbrowser=True, server_name="0.0.0.0", server_port=port, theme=sci_fi_theme, css=css_pro, js=js_drag_drop)
